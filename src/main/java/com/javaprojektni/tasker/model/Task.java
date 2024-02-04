@@ -22,6 +22,10 @@ public class Task {
         this.dateCreated = dateCreated;
     }
 
+    public Task() {
+
+    }
+
     public int getId() {
         return id;
     }

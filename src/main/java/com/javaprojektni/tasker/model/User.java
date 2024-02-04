@@ -9,6 +9,11 @@ public class User extends Person {
         this.mail = mail;
     }
 
+    public User() {
+        super();
+
+    }
+
     public String getMail() {
         return mail;
     }

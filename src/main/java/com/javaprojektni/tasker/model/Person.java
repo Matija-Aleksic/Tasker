@@ -12,6 +12,10 @@ public abstract class Person {
 
     }
 
+    public Person() {
+
+    }
+
     // Getters and Setters
 
     public int getUserId() {
