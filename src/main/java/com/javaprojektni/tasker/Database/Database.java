@@ -11,18 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static java.sql.DriverManager.getConnection;
 
 public class Database {
 
-    // Database URL, username, and password
-    private static final String URL = "jdbc:h2:tcp://localhost/~/tasker";
-    private static final String USER = "student";
-    private static final String PASSWORD = "student";
-    private static final String DATABASE_FILE = "dat/database.properties";
+    private static final String DATABASE_FILE = "src/main/java/com/javaprojektni/tasker/Files/database.properties";
 
     private Connection connection;
-
+    private static Logger logger = LoggerFactory.getLogger(Database.class);
 
     private static Properties loadDatabaseProperties() throws SQLException, IOException {
         Properties svojstva = new Properties();
@@ -30,8 +29,10 @@ public class Database {
         String urlBazePodataka = svojstva.getProperty("db.url");
         String korisnickoIme = svojstva.getProperty("db.user");
         String lozinka = svojstva.getProperty("db.password");
+
         return svojstva;
     }
+
 
     public Connection openConnection() throws SQLException, IOException {
         Properties properties = loadDatabaseProperties();
@@ -39,8 +40,9 @@ public class Database {
         String url = properties.getProperty("db.url");
         String user = properties.getProperty("db.user");
         String password = properties.getProperty("db.password");
-
+        logger.info("otvorena konekcia s bazom");
         return connection = getConnection(url, user, password);
+
     }
 
     public void createTask(Task task) {
@@ -49,12 +51,13 @@ public class Database {
             preparedStatement.setString(1, task.getName());
             preparedStatement.setInt(2, task.getTaskOwnerId());
             preparedStatement.setString(3, task.getTaskBody());
-            preparedStatement.setBoolean(4, task.isFinalizedStatus());
+            preparedStatement.setBoolean(4, Boolean.parseBoolean(task.isFinalizedStatus()));
             preparedStatement.setDate(5, java.sql.Date.valueOf(task.getDueDate().toString()));
             preparedStatement.setDate(6, java.sql.Date.valueOf(task.getDateCreated().toString()));
 
             preparedStatement.executeUpdate();
             System.out.println("Task created successfully.");
+            logger.info("stvoren zadatak");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -68,12 +71,14 @@ public class Database {
 
             preparedStatement.setString(1, task.getName());
             preparedStatement.setString(2, task.getTaskBody());
-            preparedStatement.setBoolean(3, task.isFinalizedStatus());
+            preparedStatement.setBoolean(3, Boolean.parseBoolean(task.isFinalizedStatus()));
             preparedStatement.setDate(4, java.sql.Date.valueOf(task.getDueDate().toString()));
             preparedStatement.setInt(5, task.getId());
 
             preparedStatement.executeUpdate();
             System.out.println("Task updated successfully.");
+            logger.info("izmjenjen zadatak");
+            //todo zapisati u file
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -131,6 +136,8 @@ public class Database {
             preparedStatement.setInt(1, taskId);
             preparedStatement.executeUpdate();
             System.out.println("Task deleted successfully.");
+            logger.info("Obrisan zadatak");
+            //todo zapisati u file
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -416,7 +423,7 @@ public class Database {
                 user.setUserId(resultSet.getInt("user_id"));
                 user.setName(resultSet.getString("name"));
                 user.setSurname(resultSet.getString("surname"));
-                user.setMail(resultSet.getString("mail_address"));
+                user.setMail(resultSet.getString("email_address"));
                 taskInvitees.add(user);
             }
 

@@ -2,6 +2,7 @@ module com.javaprojektni.tasker {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires org.slf4j;
 
 
     opens com.javaprojektni.tasker to javafx.fxml;

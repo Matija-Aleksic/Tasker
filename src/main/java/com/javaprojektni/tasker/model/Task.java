@@ -1,6 +1,11 @@
 package com.javaprojektni.tasker.model;
 
+import com.javaprojektni.tasker.Database.Database;
+
+import java.io.IOException;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class Task {
@@ -50,6 +55,18 @@ public class Task {
         this.taskOwnerId = taskOwnerId;
     }
 
+    public String getTaskOwner() throws SQLException, IOException {
+        Database database = new Database();
+        database.openConnection();
+
+        return database.getAllUsers()
+                .stream()
+                .filter(user -> this.id == user.getUserId())
+                .findFirst()
+                .map(user -> user.getName()+ " " + user.getSurname())
+                .orElse(null);
+    }
+
     public String getTaskBody() {
         return taskBody;
     }
@@ -58,8 +75,8 @@ public class Task {
         this.taskBody = taskBody;
     }
 
-    public boolean isFinalizedStatus() {
-        return finalizedStatus;
+    public String isFinalizedStatus() {
+        return finalizedStatus ? "TRUE" : "FALSE";
     }
 
     public void setFinalizedStatus(boolean finalizedStatus) {
@@ -82,5 +99,19 @@ public class Task {
         this.dateCreated = dateCreated;
     }
 
+
+    public String getInvitees() throws SQLException, IOException {
+        Database database = new Database();
+        database.openConnection();
+        ArrayList<User> users = database.getTaskInvitees(this.id);
+        StringBuilder ans = new StringBuilder();
+        for (User user : users) {
+            ans.append(user.getName()).append(" ").append(user.getSurname()).append(",");
+        }
+        if (ans.length() > 0) {
+            ans.deleteCharAt(ans.length() - 1);
+        }
+        return ans.toString();
+    }
 
 }
