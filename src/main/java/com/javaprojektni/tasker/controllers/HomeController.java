@@ -121,7 +121,10 @@ public class HomeController {
     }
 
     @FXML
-    private void refresh() {
+    private void refresh() throws SQLException, IOException {
+        Database database = new Database();
+        database.openConnection();
+        tasks = database.getAllTasks();
         ObservableList<Task> taskList = FXCollections.observableArrayList(tasks);
         taskTableView.setItems(taskList);
         by.setValue(null);

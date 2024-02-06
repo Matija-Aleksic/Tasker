@@ -18,6 +18,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
@@ -39,7 +40,7 @@ public class NewTaskController {
     private DatePicker dueDate;
     private ObservableList<String> selectedItems = FXCollections.observableArrayList();
     private int userId;
-    private int taskId;
+    private Optional<Integer> taskId;
 
     @FXML
     private void initialize() throws SQLException, IOException {
@@ -61,7 +62,8 @@ public class NewTaskController {
         database.openConnection();
 
         userId = database.getAllUsers().stream().filter(user -> (user.getMail()).equals(logedUser)).findFirst().map(User::getUserId).orElse(0);
-        taskId = database.getAllTasks().size();
+        taskId = database.getAllTasks().stream().map(Task::getId).max(Integer::compareTo);
+
         String imagePath = "/images/" + userId + ".jpg";
         URL imageUrl = getClass().getResource(imagePath);
         Image image = null;
@@ -77,6 +79,8 @@ public class NewTaskController {
     @FXML
     private void createTask() {
         TaskBuilder taskBuilder = new TaskBuilder();
+        int bigerId = taskId.get();
+        bigerId++;
         Task newtask = taskBuilder
                 .setName(taskName.getText())
                 .setTaskBody(taskDescription.getText())
@@ -84,7 +88,7 @@ public class NewTaskController {
                 .setTaskOwnerId(userId)
                 .setDueDate(Date.valueOf(dueDate.getValue()))
                 .setFinalizedStatus(Boolean.FALSE)
-                .setId(taskId + 1)
+                .setId(bigerId)
                 .createTask();
         database.createTask(newtask);
         ArrayList<User> invited = new ArrayList<>();
@@ -93,7 +97,7 @@ public class NewTaskController {
                 .collect(Collectors.toList());
 
         for (int i = 0; i < invited.size(); i++) {
-            database.addTaskInvitee(taskId + 1, invited.get(i).getUserId());
+            database.addTaskInvitee(bigerId, invited.get(i).getUserId());
         }
 
     }
