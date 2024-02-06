@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 public class LoginPageController {
     public static Boolean isAdmin = Boolean.FALSE;
+    public static String  logedUser ="default";
     @FXML
     private TextField usernameTextfield;
     @FXML
@@ -101,6 +102,7 @@ public class LoginPageController {
             if (database.checkPassword(username, loginpass)) {
                 MenuBarController.showHomePage();
                 isAdmin = Boolean.TRUE;
+                logedUser = username;
             } else {
                 passwordTextfield.setText(null);
                 System.out.println("wrong pass");
@@ -115,5 +117,11 @@ public class LoginPageController {
         }
     }
 
+    public static String getLogedUser() {
+        return logedUser;
+    }
 
+    public static void setLogedUser(String logedUser) {
+        LoginPageController.logedUser = logedUser;
+    }
 }

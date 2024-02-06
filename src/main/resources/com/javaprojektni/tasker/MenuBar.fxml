@@ -5,17 +5,21 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="0.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.javaprojektni.tasker.controllers.MenuBarController">
+<AnchorPane prefHeight="0.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.javaprojektni.tasker.controllers.MenuBarController">
   <MenuBar layoutY="2.0" minWidth="1000.0" prefHeight="25.0" prefWidth="1000.0">
     <Menu mnemonicParsing="false" text="Home">
-      <MenuItem mnemonicParsing="false" text="Close"/>
+      <MenuItem mnemonicParsing="false" onAction="#showHomePage" text="home screen" />
     </Menu>
     <Menu mnemonicParsing="false" text="New Task">
-      <MenuItem mnemonicParsing="false" text="Delete"/>
+      <MenuItem mnemonicParsing="false" onAction="#showNewTask" text="open new task" />
     </Menu>
     <Menu mnemonicParsing="false" text="Logger">
-      <MenuItem mnemonicParsing="false" text="About"/>
+      <MenuItem mnemonicParsing="false" text="About" />
     </Menu>
+      <Menu mnemonicParsing="false" text="Log out">
+         <items>
+            <MenuItem mnemonicParsing="false" onAction="#showLoginPage" text="logout" />
+         </items>
+      </Menu>
   </MenuBar>
 </AnchorPane>

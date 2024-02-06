@@ -67,7 +67,7 @@ public class Database {
     }
 
     public void createTask(Task task) {
-        try (Connection connection = openConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO tasks (name, task_owner_id, task_body, finalized_status, due_date, date_created) VALUES (?, ?, ?, ?, ?, ?)")) {
+        try (Connection connection = openConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO tasks (name, task_owner_id, task_body, finalized_status, due_date, date_created, id) VALUES (?,?, ?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, task.getName());
             preparedStatement.setInt(2, task.getTaskOwnerId());
@@ -75,6 +75,7 @@ public class Database {
             preparedStatement.setBoolean(4, Boolean.parseBoolean(task.isFinalizedStatus()));
             preparedStatement.setDate(5, java.sql.Date.valueOf(task.getDueDate().toString()));
             preparedStatement.setDate(6, java.sql.Date.valueOf(task.getDateCreated().toString()));
+            preparedStatement.setInt(7, task.getId());
 
             preparedStatement.executeUpdate();
             System.out.println("Task created successfully.");
