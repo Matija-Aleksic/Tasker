@@ -19,34 +19,27 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
-import javafx.scene.control.SelectionMode;
-
 
 import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
 
 public class NewTaskController {
 
+    Database database = new Database();
     @FXML
     private TextField taskName;
-
     @FXML
     private TextArea taskDescription;
-
     @FXML
     private ChoiceBox<String> invitees;
-
     @FXML
     private Label userLabel;
-
     @FXML
     private ImageView userPicture;
-
     @FXML
     private DatePicker dueDate;
     private ObservableList<String> selectedItems = FXCollections.observableArrayList();
     private int userId;
     private int taskId;
-    Database database = new Database();
 
     @FXML
     private void initialize() throws SQLException, IOException {
@@ -61,13 +54,14 @@ public class NewTaskController {
         changImg();
 
     }
+
     @FXML
     private void changImg() throws SQLException, IOException {
         Database database = new Database();
         database.openConnection();
 
         userId = database.getAllUsers().stream().filter(user -> (user.getMail()).equals(logedUser)).findFirst().map(User::getUserId).orElse(0);
-        taskId =database.getAllTasks().size();
+        taskId = database.getAllTasks().size();
         String imagePath = "/images/" + userId + ".jpg";
         URL imageUrl = getClass().getResource(imagePath);
         Image image = null;
@@ -81,19 +75,27 @@ public class NewTaskController {
     }
 
     @FXML
-    private void createTask(){
+    private void createTask() {
         TaskBuilder taskBuilder = new TaskBuilder();
         Task newtask = taskBuilder
-                        .setName(taskName.getText())
-                        .setTaskBody(taskDescription.getText())
-                        .setDateCreated(Date.valueOf(LocalDate.now()))
-                        .setTaskOwnerId(userId)
-                        .setDueDate(Date.valueOf(dueDate.getValue()))
-                        .setFinalizedStatus(Boolean.FALSE)
-                        .setId(taskId+1)
-                        .createTask();
+                .setName(taskName.getText())
+                .setTaskBody(taskDescription.getText())
+                .setDateCreated(Date.valueOf(LocalDate.now()))
+                .setTaskOwnerId(userId)
+                .setDueDate(Date.valueOf(dueDate.getValue()))
+                .setFinalizedStatus(Boolean.FALSE)
+                .setId(taskId + 1)
+                .createTask();
         database.createTask(newtask);
+        ArrayList<User> invited = new ArrayList<>();
+        invited = (ArrayList<User>) database.getAllUsers().stream()
+                .filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue()))
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < invited.size(); i++) {
+            database.addTaskInvitee(taskId + 1, invited.get(i).getUserId());
+        }
+
     }
-
-
 }
+
