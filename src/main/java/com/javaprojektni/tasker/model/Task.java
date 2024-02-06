@@ -59,12 +59,7 @@ public class Task {
         Database database = new Database();
         database.openConnection();
 
-        return database.getAllUsers()
-                .stream()
-                .filter(user -> this.id == user.getUserId())
-                .findFirst()
-                .map(user -> user.getName()+ " " + user.getSurname())
-                .orElse(null);
+        return database.getAllUsers().stream().filter(user -> this.id == user.getUserId()).findFirst().map(user -> user.getName() + " " + user.getSurname()).orElse(null);
     }
 
     public String getTaskBody() {
@@ -108,7 +103,7 @@ public class Task {
         for (User user : users) {
             ans.append(user.getName()).append(" ").append(user.getSurname()).append(",");
         }
-        if (ans.length() > 0) {
+        if (!ans.isEmpty()) {
             ans.deleteCharAt(ans.length() - 1);
         }
         return ans.toString();

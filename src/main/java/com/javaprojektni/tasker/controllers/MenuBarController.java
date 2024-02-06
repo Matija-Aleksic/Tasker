@@ -21,6 +21,7 @@ public class MenuBarController {
         }
 
     }
+
     @FXML
     public static void showLoginPage() {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("LoginPage.fxml"));

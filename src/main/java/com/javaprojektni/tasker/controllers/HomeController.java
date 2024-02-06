@@ -16,6 +16,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -61,7 +62,7 @@ public class HomeController {
     protected void initialize() throws SQLException, IOException {
 
 
-        Image image = new Image(getClass().getResource("/images/0.png").toExternalForm());
+        Image image = new Image(Objects.requireNonNull(getClass().getResource("/images/0.png")).toExternalForm());
         imageView.setImage(image);
 
         Database database = new Database();
@@ -77,9 +78,7 @@ public class HomeController {
         ownerColumn.setCellValueFactory(cellData -> {
             try {
                 return new ReadOnlyStringWrapper(cellData.getValue().getTaskOwner());
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
+            } catch (SQLException | IOException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -89,10 +88,8 @@ public class HomeController {
         madeDateColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDateCreated().toString()));
         inviteesColumn.setCellValueFactory(cellData -> {
             try {
-                return new ReadOnlyStringWrapper(cellData.getValue().getInvitees().toString());
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
+                return new ReadOnlyStringWrapper(cellData.getValue().getInvitees());
+            } catch (SQLException | IOException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -115,14 +112,16 @@ public class HomeController {
         URL imageUrl = getClass().getResource(imagePath);
         Image image = null;
         try {
+            assert imageUrl != null;
             image = new Image(imageUrl.toExternalForm());
         } catch (Exception e) {
             System.out.println("nije pronadena slika");
         }
         imageView.setImage(image);
     }
+
     @FXML
-    private void  refresh(){
+    private void refresh() {
         ObservableList<Task> taskList = FXCollections.observableArrayList(tasks);
         taskTableView.setItems(taskList);
         by.setValue(null);
@@ -130,7 +129,7 @@ public class HomeController {
         dueDate.setValue(null);
         madeOn.setValue(null);
         showFinished.setSelected(false);
-        Image image = new Image(getClass().getResource("/images/0.png").toExternalForm());
+        Image image = new Image(Objects.requireNonNull(getClass().getResource("/images/0.png")).toExternalForm());
         imageView.setImage(image);
     }
 
@@ -143,9 +142,7 @@ public class HomeController {
         Optional<LocalDate> optionalDueDate = Optional.ofNullable(dueDate.getValue());
         Optional<Boolean> optionalBoolean = Optional.of(showFinished.isSelected());
 
-        ArrayList<Task> filteredTasks = tasks.stream()
-                .filter(task -> optionalBy
-                        .map(byValue -> {
+        ArrayList<Task> filteredTasks = tasks.stream().filter(task -> optionalBy.map(byValue -> {
             try {
                 return task.getTaskOwner().equals(byValue);
             } catch (SQLException | IOException e) {
@@ -157,7 +154,7 @@ public class HomeController {
             } catch (SQLException | IOException e) {
                 throw new RuntimeException(e);
             }
-        }).orElse(true)).filter(task -> optionalDateMadeon.map(dateValue -> task.getDateCreated().toLocalDate().isEqual(dateValue)).orElse(true)).filter(task -> optionalDueDate.map(dateValue -> task.getDueDate().toLocalDate().isEqual(dateValue)).orElse(true)).filter(task -> !optionalBoolean.isPresent() || optionalBoolean.get() == Boolean.parseBoolean(task.isFinalizedStatus())).collect(Collectors.toCollection(ArrayList::new));
+        }).orElse(true)).filter(task -> optionalDateMadeon.map(dateValue -> task.getDateCreated().toLocalDate().isEqual(dateValue)).orElse(true)).filter(task -> optionalDueDate.map(dateValue -> task.getDueDate().toLocalDate().isEqual(dateValue)).orElse(true)).filter(task -> optionalBoolean.get() == Boolean.parseBoolean(task.isFinalizedStatus())).collect(Collectors.toCollection(ArrayList::new));
         ObservableList<Task> taskList = FXCollections.observableArrayList(filteredTasks);
         taskTableView.setItems(taskList);
     }

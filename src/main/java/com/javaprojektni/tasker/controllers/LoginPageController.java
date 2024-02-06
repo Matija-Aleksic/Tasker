@@ -4,7 +4,10 @@ import com.javaprojektni.tasker.Database.Database;
 import com.javaprojektni.tasker.genericClass.AlertUtils;
 import com.javaprojektni.tasker.model.User;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Window;
@@ -12,17 +15,19 @@ import javafx.stage.Window;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 public class LoginPageController {
     public static Boolean isAdmin = Boolean.FALSE;
-    private ArrayList<User> users = new ArrayList<>();
     @FXML
     private TextField usernameTextfield;
     @FXML
     private TextField passwordTextfield;
     @FXML
     private Button loginBuutton;
+
+    public static void setAdmin(Boolean value) {
+        isAdmin = value;
+    }
 
     @FXML
     protected void initialize() {
@@ -52,23 +57,19 @@ public class LoginPageController {
 
                 if (!suggestionsPopup.isShowing()) {
                     Window window = usernameTextfield.getScene().getWindow();
-                    double x = window.getX() + usernameTextfield.localToScene(0, 0).getX()+10;
-                    double y = window.getY() + usernameTextfield.localToScene(0, usernameTextfield.getHeight()).getY()+30;
+                    double x = window.getX() + usernameTextfield.localToScene(0, 0).getX() + 10;
+                    double y = window.getY() + usernameTextfield.localToScene(0, usernameTextfield.getHeight()).getY() + 30;
                     suggestionsPopup.show(window, x, y);
                 }
             }
         });
     }
-    public static void setAdmin(Boolean value) {
-        isAdmin = value;
-    }
-
 
     private String[] getSuggestions(String enteredText) throws SQLException, IOException {
         Database database = new Database();
         database.openConnection();
         ArrayList<String> emailList = new ArrayList<>();
-        users = database.getAllUsers();
+        ArrayList<User> users = database.getAllUsers();
         for (User user : users) {
             emailList.add(user.getMail());
         }
@@ -97,7 +98,7 @@ public class LoginPageController {
 
             String loginpass = passwordTextfield.getText();
             String username = usernameTextfield.getText();
-            if (database.checkPassword(username,loginpass)) {
+            if (database.checkPassword(username, loginpass)) {
                 MenuBarController.showHomePage();
                 isAdmin = Boolean.TRUE;
             } else {
@@ -110,7 +111,7 @@ public class LoginPageController {
         } catch (SQLException | IOException e) {
             // Handle exceptions
             e.printStackTrace();
-          //  Alert.error("An error occurred during login");
+            //  Alert.error("An error occurred during login");
         }
     }
 

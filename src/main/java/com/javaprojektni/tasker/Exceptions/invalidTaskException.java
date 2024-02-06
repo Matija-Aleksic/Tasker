@@ -1,6 +1,6 @@
 package com.javaprojektni.tasker.Exceptions;
 
-public class invalidTaskException extends RuntimeException{
+public class invalidTaskException extends RuntimeException {
     public invalidTaskException() {
     }
 

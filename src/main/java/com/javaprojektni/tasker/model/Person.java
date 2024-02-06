@@ -16,8 +16,6 @@ public abstract class Person {
 
     }
 
-    // Getters and Setters
-
     public int getUserId() {
         return userId;
     }

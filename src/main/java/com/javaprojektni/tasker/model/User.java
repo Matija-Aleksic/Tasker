@@ -4,7 +4,7 @@ import javafx.beans.InvalidationListener;
 import javafx.collections.ArrayChangeListener;
 import javafx.collections.ObservableArray;
 
-public class User extends Person implements ObservableArray<User>, Comparable<User>{
+public class User extends Person implements ObservableArray<User>, Comparable<User> {
     private String mail;
 
 

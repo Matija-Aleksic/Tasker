@@ -3,9 +3,14 @@ package com.javaprojektni.tasker.Database;
 import com.javaprojektni.tasker.model.Task;
 import com.javaprojektni.tasker.model.TaskBuilder;
 import com.javaprojektni.tasker.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.sql.*;
@@ -13,26 +18,16 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 
 import static java.sql.DriverManager.getConnection;
 
 public class Database {
 
     private static final String DATABASE_FILE = "src/main/java/com/javaprojektni/tasker/Files/database.properties";
-
+    private static final Logger logger = LoggerFactory.getLogger(Database.class);
     private Connection connection;
-    private static Logger logger = LoggerFactory.getLogger(Database.class);
 
-    private static Properties loadDatabaseProperties() throws SQLException, IOException {
+    private static Properties loadDatabaseProperties() throws IOException {
         Properties svojstva = new Properties();
         svojstva.load(new FileReader(DATABASE_FILE));
         String urlBazePodataka = svojstva.getProperty("db.url");
@@ -42,6 +37,23 @@ public class Database {
         return svojstva;
     }
 
+    public static String hashPassword(String password) {
+        byte[] salt = new byte[16];
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
+        try {
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            byte[] hash = factory.generateSecret(spec).getEncoded();
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static boolean verifyPassword(String password, String hashedPassword) {
+        String newHashedPassword = hashPassword(password);
+        return hashedPassword.equals(newHashedPassword);
+    }
 
     public Connection openConnection() throws SQLException, IOException {
         Properties properties = loadDatabaseProperties();
@@ -75,7 +87,6 @@ public class Database {
         }
     }
 
-
     public void updateTask(Task task) {
         try (Connection connection = openConnection(); PreparedStatement preparedStatement = connection.prepareStatement("UPDATE tasks SET name = ?, task_body = ?, finalized_status = ?, due_date = ? WHERE id = ?")) {
 
@@ -96,12 +107,12 @@ public class Database {
             throw new RuntimeException(e);
         }
     }
+
     public boolean checkPassword(String username, String password) throws SQLException {
         String hashedPasswordFromDB = null;
         String query = "SELECT hashed_password FROM users WHERE email_address = ?";
 
-        try (Connection connection = openConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection connection = openConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, username);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -116,23 +127,6 @@ public class Database {
         } else {
             return false;
         }
-    }
-    public static String hashPassword(String password) {
-        byte[] salt = new byte[16];
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
-        try {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            byte[] hash = factory.generateSecret(spec).getEncoded();
-            return Base64.getEncoder().encodeToString(hash);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static boolean verifyPassword(String password, String hashedPassword) {
-        String newHashedPassword = hashPassword(password);
-        return hashedPassword.equals(newHashedPassword);
     }
 
     public ArrayList<Task> getAllTasks() {
