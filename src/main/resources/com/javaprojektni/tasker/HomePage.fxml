@@ -68,7 +68,7 @@
         </Label>
         <AmbientLight color="CHARTREUSE" GridPane.columnIndex="4" GridPane.rowIndex="4" />
         <Button fx:id="searchbutton" mnemonicParsing="false" onAction="#search" text="Search" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
-        <Button mnemonicParsing="false" text="Edit" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+        <Button mnemonicParsing="false" onAction="#editTask" text="Edit" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
         <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refresh" text="Refresh Table" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
         <ImageView fx:id="imageView" fitHeight="252.0" fitWidth="304.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="3" />
       <ComboBox fx:id="invitees" prefHeight="25.0" prefWidth="152.0" GridPane.columnIndex="1" GridPane.rowIndex="2">

@@ -1,8 +1,11 @@
 package com.javaprojektni.tasker.Database;
 
+import com.javaprojektni.tasker.genericClass.AlertUtils;
+import com.javaprojektni.tasker.genericClass.InfoUtils;
 import com.javaprojektni.tasker.model.Task;
 import com.javaprojektni.tasker.model.TaskBuilder;
 import com.javaprojektni.tasker.model.User;
+import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -195,6 +198,9 @@ public class Database {
 
             preparedStatement.executeUpdate();
             System.out.println("Task invitee added successfully.");
+            InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.INFORMATION, "Information");
+            infoUtils.showInfo("uspjesno", "Header text");
+
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -214,6 +220,18 @@ public class Database {
             e.printStackTrace();
         }
     }
+    public void deleteTaskInvitees(int taskId) {
+        try (Connection connection = openConnection(); PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM task_invitees WHERE task_id = ?")) {
+
+            preparedStatement.setInt(1, taskId);
+            preparedStatement.executeUpdate();
+            System.out.println("Task invitee deleted successfully.");
+
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void changeDueDate(int taskId, Date newDueDate) {
         try (Connection connection = openConnection(); PreparedStatement preparedStatement = connection.prepareStatement("UPDATE tasks SET due_date = ? WHERE id = ?")) {

@@ -99,6 +99,14 @@ public class HomeController {
         taskTableView.setItems(taskList);
 
     }
+    @FXML
+    private void editTask(){
+        EditTaskController.editTaskint = taskTableView.getSelectionModel().getSelectedItem().getId();
+        MenuBarController menuBarController = new MenuBarController();
+        menuBarController.showEditPage();
+
+    }
+
 
     @FXML
     private void changImg() throws SQLException, IOException {

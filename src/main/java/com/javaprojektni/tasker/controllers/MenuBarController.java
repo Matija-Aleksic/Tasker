@@ -23,21 +23,47 @@ public class MenuBarController {
 
     }
 
-@FXML
-    public void showNewTask(ActionEvent actionEvent) {
-    FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/javaprojektni/tasker/NewTask.fxml"));
-    try {
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
-        HelloApplication.getMainStage().setTitle("Welcome");
-        HelloApplication.getMainStage().setScene(scene);
-        HelloApplication.getMainStage().show();
-    } catch (IOException e) {
-        throw new RuntimeException();
-    }
-    }
-
     public void showHomePage(ActionEvent actionEvent) {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/javaprojektni/tasker/HomePage.fxml"));
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
+            HelloApplication.getMainStage().setTitle("Welcome");
+            HelloApplication.getMainStage().setScene(scene);
+            HelloApplication.getMainStage().show();
+        } catch (IOException e) {
+            throw new RuntimeException();
+        }
+    }
+
+    public void showEditPage() {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/javaprojektni/tasker/EditTask.fxml"));
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
+            HelloApplication.getMainStage().setTitle("Welcome");
+            HelloApplication.getMainStage().setScene(scene);
+            HelloApplication.getMainStage().show();
+        } catch (IOException e) {
+            throw new RuntimeException(e); // Pass the caught IOException to the RuntimeException constructor
+        }
+    }
+
+
+
+    public void showNewTask(ActionEvent actionEvent) {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/javaprojektni/tasker/NewTask.fxml"));
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
+            HelloApplication.getMainStage().setTitle("Welcome");
+            HelloApplication.getMainStage().setScene(scene);
+            HelloApplication.getMainStage().show();
+        } catch (IOException e) {
+            throw new RuntimeException();
+        }
+    }
+
+    @FXML
+    public void showEditPage(ActionEvent actionEvent) {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/javaprojektni/tasker/EditTask.fxml"));
         try {
             Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
             HelloApplication.getMainStage().setTitle("Welcome");
