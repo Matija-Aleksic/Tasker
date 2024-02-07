@@ -11,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,6 +28,8 @@ import static com.javaprojektni.tasker.controllers.LoginPageController.isAdmin;
 import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
 
 public class HomeController {
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+    private static ArrayList<Task> tasks;
     public Button deleteButton;
     @FXML
     TableColumn<Task, String> ownerColumn;
@@ -59,9 +63,19 @@ public class HomeController {
     private Button searchbutton;
     @FXML
     private Button refreshButton;
-    private ArrayList<Task> tasks;
 
     public HomeController() {
+    }
+
+    public static void refreshTasks() {
+        try {
+            Database database = new Database();
+            database.openConnection();
+            tasks = database.getAllTasks();
+
+        } catch (SQLException | IOException e) {
+            logger.warn(e.toString());
+        }
     }
 
     @FXML
@@ -115,7 +129,6 @@ public class HomeController {
 
     }
 
-
     @FXML
     private void changImg() throws SQLException, IOException {
         Database database = new Database();
@@ -138,9 +151,7 @@ public class HomeController {
 
     @FXML
     private void refresh() throws SQLException, IOException {
-        Database database = new Database();
-        database.openConnection();
-        tasks = database.getAllTasks();
+        refreshTasks();
         ObservableList<Task> taskList = FXCollections.observableArrayList(tasks);
         taskTableView.setItems(taskList);
         by.setValue(null);

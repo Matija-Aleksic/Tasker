@@ -1,12 +1,19 @@
 package com.javaprojektni.tasker;
 
+import com.javaprojektni.tasker.Thhreads.ReadChanges;
+import com.javaprojektni.tasker.Thhreads.TaskRefresh;
+import com.javaprojektni.tasker.Thhreads.WriteChanges;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class HelloApplication extends Application {
     public static Stage mainStage;
@@ -22,6 +29,21 @@ public class HelloApplication extends Application {
 
     }
 
+    @Override
+    public void init() {
+        ReadChanges readChanges = new ReadChanges(1);
+        WriteChanges writeChanges = new WriteChanges(2);
+        TaskRefresh taskRefresh = new TaskRefresh(3);
+
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        scheduler.scheduleAtFixedRate(() -> {
+            Platform.runLater(readChanges);
+            Platform.runLater(writeChanges);
+            Platform.runLater(taskRefresh);
+        }, 0, 5, TimeUnit.SECONDS);
+    }
+
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -33,5 +55,6 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
 
 }

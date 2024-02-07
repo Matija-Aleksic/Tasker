@@ -1,47 +1,34 @@
 package com.javaprojektni.tasker.model;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 
 public class LogWriter {
 
     private static final String FILE_PATH = "src/main/java/com/javaprojektni/tasker/Files/changes.dat";
+    static ArrayList<Activity> changes = new ArrayList<>();
 
     public static void writeLog(Activity activity) {
-        try {
-            List<Activity> activities = readLogsFromFile();
-            activities.add(activity); // Add the new activity to the list
+        changes.add(activity);
+    }
 
-            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
-                outputStream.writeObject(activities); // Write the updated list back to the file
-                System.out.println("Log entry has been written to file.");
-            }
+    public synchronized static void writeLogsToFile() {
+        ArrayList<Activity> previousLogs = (ArrayList<Activity>) LogReader.readLogsFromFile();
+        changes.addAll(previousLogs);
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
+            outputStream.writeObject(changes);
+            System.out.println("Log entry has been written to file.");
+            changes.clear();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static List<Activity> readLogsFromFile() throws IOException {
-        List<Activity> activities = new ArrayList<>();
-        File file = new File(FILE_PATH);
-
-        if (file.exists()) {
-            try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
-                Object obj = inputStream.readObject();
-                if (obj instanceof List) {
-                    activities.addAll((List<Activity>) obj); // Add existing activities to the list
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return activities;
-    }
 
     public static String getChanges(Task oldTask, Task newTask) {
         StringBuilder changes = new StringBuilder();

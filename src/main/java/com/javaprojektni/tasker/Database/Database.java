@@ -1,12 +1,8 @@
 package com.javaprojektni.tasker.Database;
 
-import com.javaprojektni.tasker.genericClass.AlertUtils;
-import com.javaprojektni.tasker.genericClass.InfoUtils;
-import com.javaprojektni.tasker.model.Activity;
 import com.javaprojektni.tasker.model.Task;
 import com.javaprojektni.tasker.model.TaskBuilder;
 import com.javaprojektni.tasker.model.User;
-import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,14 +14,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 
 import static com.javaprojektni.tasker.controllers.EditTaskController.editTaskint;
-import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
 import static java.sql.DriverManager.getConnection;
 
 public class Database {
@@ -205,6 +199,7 @@ public class Database {
             e.printStackTrace();
         }
     }
+
     public boolean isAdmin(String userId) throws SQLException, IOException {
         try (Connection connection = openConnection(); PreparedStatement preparedStatement = connection.prepareStatement("SELECT ADMIN_STATUS  FROM users WHERE email_address = ?")) {
             preparedStatement.setString(1, userId);
@@ -232,6 +227,7 @@ public class Database {
             e.printStackTrace();
         }
     }
+
     public void deleteTaskInvitees(int taskId) {
         try (Connection connection = openConnection(); PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM task_invitees WHERE task_id = ?")) {
 
