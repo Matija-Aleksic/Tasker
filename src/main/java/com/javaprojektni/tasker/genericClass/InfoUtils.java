@@ -16,8 +16,8 @@ public class InfoUtils<T, U> {
 
     public void showInfo(T message, U header) {
         Alert alert = new Alert(alertType);
-        alert.setTitle(title); // Set title to provided title
-        alert.setHeaderText(header != null ? header.toString() : null); // Set header text if provided
+        alert.setTitle(title);
+        alert.setHeaderText(header != null ? header.toString() : null);
         alert.setContentText(message.toString());
         alert.showAndWait();
     }

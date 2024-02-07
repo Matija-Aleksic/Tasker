@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class ChangesPageController {
 
 
-
     @FXML
     private TableView<Activity> ChangesTableView;
 

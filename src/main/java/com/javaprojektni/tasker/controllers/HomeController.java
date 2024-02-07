@@ -1,6 +1,7 @@
 package com.javaprojektni.tasker.controllers;
 
 import com.javaprojektni.tasker.Database.Database;
+import com.javaprojektni.tasker.Exceptions.TaskNotFoundException;
 import com.javaprojektni.tasker.genericClass.AlertUtils;
 import com.javaprojektni.tasker.model.*;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -72,10 +73,13 @@ public class HomeController {
             Database database = new Database();
             database.openConnection();
             tasks = database.getAllTasks();
+            if (tasks.isEmpty())
+                throw new TaskNotFoundException();
 
-        } catch (SQLException | IOException e) {
+        } catch (SQLException | IOException | TaskNotFoundException e) {
             logger.warn(e.toString());
         }
+
     }
 
     @FXML

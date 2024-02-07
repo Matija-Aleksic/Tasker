@@ -12,7 +12,7 @@ public class AlertUtils<T> {
 
     public void showAlert(String message) {
         Alert alert = new Alert(alertType);
-        alert.setTitle(alertType.toString()); // Set title to alert type
+        alert.setTitle(alertType.toString());
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

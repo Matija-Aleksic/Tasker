@@ -2,6 +2,8 @@ package com.javaprojektni.tasker.controllers;
 
 
 import com.javaprojektni.tasker.Database.Database;
+import com.javaprojektni.tasker.Exceptions.InvalidTaskStateException;
+import com.javaprojektni.tasker.Exceptions.invalidTaskException;
 import com.javaprojektni.tasker.genericClass.InfoUtils;
 import com.javaprojektni.tasker.model.*;
 import javafx.collections.FXCollections;
@@ -10,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
 import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
 
 public class NewTaskController {
+    private static final Logger logger = LoggerFactory.getLogger(NewTaskController.class);
 
     Database database = new Database();
     @FXML
@@ -80,7 +85,12 @@ public class NewTaskController {
         TaskBuilder taskBuilder = new TaskBuilder();
         int bigerId = taskId.get();
         bigerId++;
-        Task newtask = taskBuilder.setName(taskName.getText()).setTaskBody(taskDescription.getText()).setDateCreated(Date.valueOf(LocalDate.now())).setTaskOwnerId(userId).setDueDate(Date.valueOf(dueDate.getValue())).setFinalizedStatus(Boolean.FALSE).setId(bigerId).createTask();
+        Task newtask = null;
+        try {
+            newtask = taskBuilder.setName(taskName.getText()).setTaskBody(taskDescription.getText()).setDateCreated(Date.valueOf(LocalDate.now())).setTaskOwnerId(userId).setDueDate(Date.valueOf(dueDate.getValue())).setFinalizedStatus(Boolean.FALSE).setId(bigerId).createTask();
+        } catch (invalidTaskException e) {
+            logger.warn(e.toString());
+        }
         database.createTask(newtask);
 
         Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "created a new task");

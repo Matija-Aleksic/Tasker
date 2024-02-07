@@ -1,6 +1,7 @@
 package com.javaprojektni.tasker.controllers;
 
 import com.javaprojektni.tasker.Database.Database;
+import com.javaprojektni.tasker.Exceptions.TaskUpdateFailedException;
 import com.javaprojektni.tasker.genericClass.InfoUtils;
 import com.javaprojektni.tasker.model.Activity;
 import com.javaprojektni.tasker.model.LogWriter;
@@ -101,11 +102,18 @@ public class EditTaskController {
 
 
         database.deleteTaskInvitees(editTaskint);
-        database.updateTask(task);
-        int userId = database.getAllUsers().stream().filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue())).findFirst().map(User::getUserId).orElse(0);
+
+            database.updateTask(task);
+
+        try {
+            int userId = database.getAllUsers().stream().filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue())).findFirst().map(User::getUserId).orElse(0);
+            if (userId==0)
+                throw new TaskUpdateFailedException();
+        } catch (TaskUpdateFailedException e) {
+            logger.warn(e.toString());
+        }
         if (!invitee.isEmpty()){
             database.addTaskInvitee(editTaskint, invitee.get(1).getUserId());
-
         }
         InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.INFORMATION, "Information");
         infoUtils.showInfo("uspjesno", "stvoren novi task");
