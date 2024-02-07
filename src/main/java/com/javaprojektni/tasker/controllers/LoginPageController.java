@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class LoginPageController {
     public static Boolean isAdmin = Boolean.FALSE;
-    public static String  logedUser ="default";
+    public static String logedUser ="default";
     @FXML
     private TextField usernameTextfield;
     @FXML

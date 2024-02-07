@@ -46,6 +46,7 @@ public class MenuBarController {
             throw new RuntimeException(e);
         }
     }
+
     public void showChangesPage() {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/javaprojektni/tasker/ChangesPage.fxml"));
         try {
@@ -57,7 +58,6 @@ public class MenuBarController {
             throw new RuntimeException(e);
         }
     }
-
 
 
     public void showNewTask(ActionEvent actionEvent) {

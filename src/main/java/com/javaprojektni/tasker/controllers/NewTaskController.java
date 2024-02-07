@@ -80,15 +80,7 @@ public class NewTaskController {
         TaskBuilder taskBuilder = new TaskBuilder();
         int bigerId = taskId.get();
         bigerId++;
-        Task newtask = taskBuilder
-                .setName(taskName.getText())
-                .setTaskBody(taskDescription.getText())
-                .setDateCreated(Date.valueOf(LocalDate.now()))
-                .setTaskOwnerId(userId)
-                .setDueDate(Date.valueOf(dueDate.getValue()))
-                .setFinalizedStatus(Boolean.FALSE)
-                .setId(bigerId)
-                .createTask();
+        Task newtask = taskBuilder.setName(taskName.getText()).setTaskBody(taskDescription.getText()).setDateCreated(Date.valueOf(LocalDate.now())).setTaskOwnerId(userId).setDueDate(Date.valueOf(dueDate.getValue())).setFinalizedStatus(Boolean.FALSE).setId(bigerId).createTask();
         database.createTask(newtask);
 
         Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "created a new task");
@@ -96,9 +88,7 @@ public class NewTaskController {
         InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.INFORMATION, "Information");
         infoUtils.showInfo("uspjesno", "stvoren novi task");
         ArrayList<User> invited = new ArrayList<>();
-        invited = (ArrayList<User>) database.getAllUsers().stream()
-                .filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue()))
-                .collect(Collectors.toList());
+        invited = (ArrayList<User>) database.getAllUsers().stream().filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue())).collect(Collectors.toList());
 
         for (int i = 0; i < invited.size(); i++) {
             database.addTaskInvitee(bigerId, invited.get(i).getUserId());

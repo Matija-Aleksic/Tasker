@@ -1,20 +1,18 @@
 package com.javaprojektni.tasker.controllers;
 
-import java.io.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-
 import com.javaprojektni.tasker.model.Activity;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 public class ChangesPageController {
 
@@ -33,8 +31,6 @@ public class ChangesPageController {
         descriiptionTableColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getMadeBys()));
         madeByTableColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDesc()));
         dateTableColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getMadeOn().toString()));
-
-
 
 
         readLogFile();
