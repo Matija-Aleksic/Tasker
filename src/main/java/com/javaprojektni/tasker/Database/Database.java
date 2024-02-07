@@ -2,6 +2,7 @@ package com.javaprojektni.tasker.Database;
 
 import com.javaprojektni.tasker.genericClass.AlertUtils;
 import com.javaprojektni.tasker.genericClass.InfoUtils;
+import com.javaprojektni.tasker.model.Activity;
 import com.javaprojektni.tasker.model.Task;
 import com.javaprojektni.tasker.model.TaskBuilder;
 import com.javaprojektni.tasker.model.User;
@@ -17,11 +18,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 
+import static com.javaprojektni.tasker.controllers.EditTaskController.editTaskint;
+import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
 import static java.sql.DriverManager.getConnection;
 
 public class Database {
@@ -98,13 +102,11 @@ public class Database {
             preparedStatement.setString(2, task.getTaskBody());
             preparedStatement.setBoolean(3, Boolean.parseBoolean(task.isFinalizedStatus()));
             preparedStatement.setDate(4, java.sql.Date.valueOf(task.getDueDate().toString()));
-            preparedStatement.setInt(5, task.getId());
+            preparedStatement.setInt(5, editTaskint);
 
             preparedStatement.executeUpdate();
             System.out.println("Task updated successfully.");
             logger.info("izmjenjen zadatak");
-            //todo zapisati u file
-
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (IOException e) {

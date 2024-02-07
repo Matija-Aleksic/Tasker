@@ -26,7 +26,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         mainStage = stage;
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/javaprojektni/tasker/HomePage.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/javaprojektni/tasker/LoginPage.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root, 1000, 700);
         stage.setTitle("Hello!");

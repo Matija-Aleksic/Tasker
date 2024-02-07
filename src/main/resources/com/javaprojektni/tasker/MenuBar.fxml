@@ -14,7 +14,7 @@
       <MenuItem mnemonicParsing="false" onAction="#showNewTask" text="open new task" />
     </Menu>
     <Menu mnemonicParsing="false" text="Logger">
-      <MenuItem mnemonicParsing="false" text="About" />
+      <MenuItem mnemonicParsing="false" onAction="#showChangesPage" text="changes" />
     </Menu>
       <Menu mnemonicParsing="false" text="Log out">
          <items>

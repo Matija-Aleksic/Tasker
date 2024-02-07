@@ -43,7 +43,18 @@ public class MenuBarController {
             HelloApplication.getMainStage().setScene(scene);
             HelloApplication.getMainStage().show();
         } catch (IOException e) {
-            throw new RuntimeException(e); // Pass the caught IOException to the RuntimeException constructor
+            throw new RuntimeException(e);
+        }
+    }
+    public void showChangesPage() {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/javaprojektni/tasker/ChangesPage.fxml"));
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
+            HelloApplication.getMainStage().setTitle("Welcome");
+            HelloApplication.getMainStage().setScene(scene);
+            HelloApplication.getMainStage().show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

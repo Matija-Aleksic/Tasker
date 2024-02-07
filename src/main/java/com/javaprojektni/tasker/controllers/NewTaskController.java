@@ -2,9 +2,8 @@ package com.javaprojektni.tasker.controllers;
 
 
 import com.javaprojektni.tasker.Database.Database;
-import com.javaprojektni.tasker.model.Task;
-import com.javaprojektni.tasker.model.TaskBuilder;
-import com.javaprojektni.tasker.model.User;
+import com.javaprojektni.tasker.genericClass.InfoUtils;
+import com.javaprojektni.tasker.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -91,6 +90,11 @@ public class NewTaskController {
                 .setId(bigerId)
                 .createTask();
         database.createTask(newtask);
+
+        Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "created a new task");
+        LogWriter.writeLog(activity);
+        InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.INFORMATION, "Information");
+        infoUtils.showInfo("uspjesno", "stvoren novi task");
         ArrayList<User> invited = new ArrayList<>();
         invited = (ArrayList<User>) database.getAllUsers().stream()
                 .filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue()))

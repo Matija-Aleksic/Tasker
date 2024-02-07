@@ -1,6 +1,9 @@
 package com.javaprojektni.tasker.controllers;
 
 import com.javaprojektni.tasker.Database.Database;
+import com.javaprojektni.tasker.genericClass.InfoUtils;
+import com.javaprojektni.tasker.model.Activity;
+import com.javaprojektni.tasker.model.LogWriter;
 import com.javaprojektni.tasker.model.Task;
 import com.javaprojektni.tasker.model.User;
 import javafx.collections.FXCollections;
@@ -16,10 +19,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
+import static com.javaprojektni.tasker.model.LogWriter.getChanges;
 
 public class EditTaskController {
     private static final Logger logger = LoggerFactory.getLogger(EditTaskController.class);
@@ -40,6 +45,8 @@ public class EditTaskController {
     private ObservableList<String> selectedItems = FXCollections.observableArrayList();
     private int userId;
     private Task task = new Task();
+    private Task oldTask = new Task();
+    private ArrayList <User> invitee;
 
     @FXML
     private void initialize() throws SQLException, IOException {
@@ -47,6 +54,7 @@ public class EditTaskController {
         System.out.println(logedUser);
         database.openConnection();
         Task task = database.getTaskById(editTaskint);
+        oldTask = database.getTaskById(editTaskint);
 
         ArrayList<User> users = database.getAllUsers();
         ObservableList<String> namesAndSurnames = users.stream().sorted().map(user -> user.getName() + " " + user.getSurname()).collect(Collectors.toCollection(FXCollections::observableArrayList));
@@ -57,6 +65,10 @@ public class EditTaskController {
         invitees.setValue(task.getInvitees());
         dueDate.setValue(task.getDueDate().toLocalDate());
         changImg();
+
+        invitee = (ArrayList<User>) database.getAllUsers().stream()
+                .filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue()))
+                .collect(Collectors.toList());
 
     }
 
@@ -84,13 +96,21 @@ public class EditTaskController {
         task.setTaskBody(taskDescription.getText());
         task.setName(taskName.getText());
         task.setDueDate(Date.valueOf(dueDate.getValue()));
+        task.setTaskOwnerId(userId);
+        task.setDateCreated(Date.valueOf(LocalDate.now()));
 
 
         database.deleteTaskInvitees(editTaskint);
         database.updateTask(task);
         int userId = database.getAllUsers().stream().filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue())).findFirst().map(User::getUserId).orElse(0);
+        if (!invitee.isEmpty()){
+            database.addTaskInvitee(editTaskint, invitee.get(1).getUserId());
 
-        database.addTaskInvitee(editTaskint, userId);
+        }
+        InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.INFORMATION, "Information");
+        infoUtils.showInfo("uspjesno", "stvoren novi task");
+        Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "Task updated: Changes - " + getChanges(oldTask, task));
+        LogWriter.writeLog(activity);
 
 
     }
