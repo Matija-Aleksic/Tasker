@@ -200,12 +200,22 @@ public class Database {
 
             preparedStatement.executeUpdate();
             System.out.println("Task invitee added successfully.");
-            InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.INFORMATION, "Information");
-            infoUtils.showInfo("uspjesno", "Header text");
-
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
+        }
+    }
+    public boolean isAdmin(String userId) throws SQLException, IOException {
+        try (Connection connection = openConnection(); PreparedStatement preparedStatement = connection.prepareStatement("SELECT ADMIN_STATUS  FROM users WHERE email_address = ?")) {
+            preparedStatement.setString(1, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getBoolean("ADMIN_STATUS");
+                } else {
+                    System.out.println("User not found.");
+                    return false;
+                }
+            }
         }
     }
 

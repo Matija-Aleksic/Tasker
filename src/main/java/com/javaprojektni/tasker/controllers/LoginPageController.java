@@ -99,21 +99,20 @@ public class LoginPageController {
 
             String loginpass = passwordTextfield.getText();
             String username = usernameTextfield.getText();
+            boolean isAdminUser = database.isAdmin(username);
+
             if (database.checkPassword(username, loginpass)) {
                 MenuBarController.showHomePage();
-                isAdmin = Boolean.TRUE;
+                isAdmin = isAdminUser;
                 logedUser = username;
             } else {
                 passwordTextfield.setText(null);
                 System.out.println("wrong pass");
                 AlertUtils<String> alertUtils = new AlertUtils<>(Alert.AlertType.WARNING);
                 alertUtils.showAlert("Wrong password");
-
             }
         } catch (SQLException | IOException e) {
-            // Handle exceptions
             e.printStackTrace();
-            //  Alert.error("An error occurred during login");
         }
     }
 

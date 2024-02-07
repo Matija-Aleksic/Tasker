@@ -1,11 +1,12 @@
 package com.javaprojektni.tasker.controllers;
 
 import com.javaprojektni.tasker.Database.Database;
-import com.javaprojektni.tasker.model.Task;
-import com.javaprojektni.tasker.model.User;
+import com.javaprojektni.tasker.genericClass.AlertUtils;
+import com.javaprojektni.tasker.model.*;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -13,6 +14,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,7 +22,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.javaprojektni.tasker.controllers.LoginPageController.isAdmin;
+import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
+
 public class HomeController {
+    public Button deleteButton;
     @FXML
     TableColumn<Task, String> ownerColumn;
     @FXML
@@ -99,8 +105,10 @@ public class HomeController {
         taskTableView.setItems(taskList);
 
     }
+
     @FXML
-    private void editTask(){
+    private void editTask() {
+
         EditTaskController.editTaskint = taskTableView.getSelectionModel().getSelectedItem().getId();
         MenuBarController menuBarController = new MenuBarController();
         menuBarController.showEditPage();
@@ -171,6 +179,27 @@ public class HomeController {
     }
 
 
+    public void deleteTask(ActionEvent actionEvent) throws SQLException, IOException {
+
+        if (!isAdmin) {
+            AlertUtils<String> alertUtils = new AlertUtils<>(Alert.AlertType.WARNING);
+            alertUtils.showAlert("Nemate Prava");
+            return;
+        }
+
+        boolean confirmed = ConfirmationDialog.showConfirmationDialog("Confirmation", "Izbrisati zadatak?");
+        if (confirmed) {
+            Database database = new Database();
+            int taskId = taskTableView.getSelectionModel().getSelectedItem().getId();
+            database.deleteTaskInvitees(taskId);
+            database.deleteTask(taskId);
+            Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "deleted task named " + taskTableView.getSelectionModel().getSelectedItem().getName());
+            LogWriter.writeLog(activity);
+            refresh();
+
+        }
+
+    }
 }
 
 
