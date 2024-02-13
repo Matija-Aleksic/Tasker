@@ -9,4 +9,6 @@ module com.javaprojektni.tasker {
     exports com.javaprojektni.tasker;
     exports com.javaprojektni.tasker.controllers;
     opens com.javaprojektni.tasker.controllers to javafx.fxml;
+    exports com.javaprojektni.tasker.Enums;
+    opens com.javaprojektni.tasker.Enums to javafx.fxml;
 }

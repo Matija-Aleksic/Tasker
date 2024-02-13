@@ -1,6 +1,7 @@
 package com.javaprojektni.tasker.model;
 
 import com.javaprojektni.tasker.Database.Database;
+import com.javaprojektni.tasker.Interfaces.Sealed;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -8,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 
-public class Task {
+public final class Task implements Sealed {
     private int id;
     private String name;
     private int taskOwnerId;
@@ -109,4 +110,8 @@ public class Task {
         return ans.toString();
     }
 
+    @Override
+    public String ids() {
+        return null;
+    }
 }
