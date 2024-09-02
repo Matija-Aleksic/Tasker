@@ -2,7 +2,6 @@ package com.javaprojektni.tasker.controllers;
 
 
 import com.javaprojektni.tasker.Database.Database;
-import com.javaprojektni.tasker.Exceptions.InvalidTaskStateException;
 import com.javaprojektni.tasker.Exceptions.invalidTaskException;
 import com.javaprojektni.tasker.genericClass.InfoUtils;
 import com.javaprojektni.tasker.model.*;
@@ -25,6 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
+import static com.javaprojektni.tasker.mail.Mailer.sendEmail;
 
 public class NewTaskController {
     private static final Logger logger = LoggerFactory.getLogger(NewTaskController.class);
@@ -81,7 +81,7 @@ public class NewTaskController {
     }
 
     @FXML
-    private void createTask() {
+    private void createTask() throws IOException {
         TaskBuilder taskBuilder = new TaskBuilder();
         int bigerId = taskId.get();
         bigerId++;
@@ -90,7 +90,7 @@ public class NewTaskController {
             InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.ERROR, "Error");
             infoUtils.showInfo("greska", "niste unijeli sve podatke");
             return;
-        }else {
+        } else {
             try {
                 newtask = taskBuilder.setName(taskName.getText()).setTaskBody(taskDescription.getText()).setDateCreated(Date.valueOf(LocalDate.now())).setTaskOwnerId(userId).setDueDate(Date.valueOf(dueDate.getValue())).setFinalizedStatus(Boolean.FALSE).setId(bigerId).createTask();
             } catch (invalidTaskException e) {
@@ -108,6 +108,9 @@ public class NewTaskController {
             for (int i = 0; i < invited.size(); i++) {
                 database.addTaskInvitee(bigerId, invited.get(i).getUserId());
             }
+
+            sendEmail(invited.get(0).getMail(), "New task from " + logedUser, "New task created: " + taskDescription.getText(), null);
+            logger.info("new task created, sent mail to " + invited.get(0).getMail());
         }
 
     }

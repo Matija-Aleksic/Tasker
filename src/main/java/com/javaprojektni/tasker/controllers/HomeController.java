@@ -73,8 +73,7 @@ public class HomeController {
             Database database = new Database();
             database.openConnection();
             tasks = database.getAllTasks();
-            if (tasks.isEmpty())
-                throw new TaskNotFoundException();
+            if (tasks.isEmpty()) throw new TaskNotFoundException();
 
         } catch (SQLException | IOException | TaskNotFoundException e) {
             logger.warn(e.toString());
@@ -211,7 +210,6 @@ public class HomeController {
             Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "deleted task named " + taskTableView.getSelectionModel().getSelectedItem().getName());
             LogWriter.writeLog(activity);
             refresh();
-
         }
 
     }

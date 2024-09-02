@@ -4,7 +4,6 @@ import com.javaprojektni.tasker.Database.Database;
 import com.javaprojektni.tasker.Exceptions.TaskUpdateFailedException;
 import com.javaprojektni.tasker.genericClass.AlertUtils;
 import com.javaprojektni.tasker.genericClass.InfoUtils;
-import com.javaprojektni.tasker.mail.MailCalendar;
 import com.javaprojektni.tasker.model.Activity;
 import com.javaprojektni.tasker.model.LogWriter;
 import com.javaprojektni.tasker.model.Task;
@@ -77,21 +76,21 @@ public class EditTaskController {
     @FXML
     private void changImg() throws SQLException, IOException {
 
-            Database database = new Database();
-            database.openConnection();
+        Database database = new Database();
+        database.openConnection();
 
-            userId = database.getAllUsers().stream().filter(user -> (user.getMail()).equals(logedUser)).findFirst().map(User::getUserId).orElse(0);
+        userId = database.getAllUsers().stream().filter(user -> (user.getMail()).equals(logedUser)).findFirst().map(User::getUserId).orElse(0);
 
-            String imagePath = "/images/" + userId + ".jpg";
-            URL imageUrl = getClass().getResource(imagePath);
-            Image image = null;
-            try {
-                assert imageUrl != null;
-                image = new Image(imageUrl.toExternalForm());
-            } catch (Exception e) {
-                System.out.println("nije pronadena slika");
-            }
-            userPicture.setImage(image);
+        String imagePath = "/images/" + userId + ".jpg";
+        URL imageUrl = getClass().getResource(imagePath);
+        Image image = null;
+        try {
+            assert imageUrl != null;
+            image = new Image(imageUrl.toExternalForm());
+        } catch (Exception e) {
+            System.out.println("nije pronadena slika");
+        }
+        userPicture.setImage(image);
 
     }
 
@@ -128,7 +127,7 @@ public class EditTaskController {
             Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "Task updated: Changes - " + getChanges(oldTask, task));
             LogWriter.writeLog(activity);
             MenuBarController.showHomePage();
-            sendEmail(invited.getMail(), "Task updated", "Task updated: Changes - " + getChanges(oldTask, task),null);
+            sendEmail(invited.getMail(), "Task updated", "Task updated: Changes - " + getChanges(oldTask, task), null);
             logger.info("mail sent");
         }
 

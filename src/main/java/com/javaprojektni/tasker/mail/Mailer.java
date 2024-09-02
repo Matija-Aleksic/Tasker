@@ -35,14 +35,12 @@ public class Mailer {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject(subject);
 
-            // Create the email content
             MimeBodyPart messageBodyPart = new MimeBodyPart();
             messageBodyPart.setText(body);
 
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
 
-            // Attach ICS if provided
             if (icsContent != null && !icsContent.isEmpty()) {
                 MimeBodyPart icsPart = new MimeBodyPart();
                 icsPart.setContent(icsContent, "text/calendar; charset=utf-8");
@@ -62,8 +60,4 @@ public class Mailer {
         }
     }
 
-//    public static void main(String[] args) throws IOException {
-//        // Example usage
-//        sendEmail("test-recipient@gmail.com", "Test Subject", "This is a test email.");
-//    }
 }
