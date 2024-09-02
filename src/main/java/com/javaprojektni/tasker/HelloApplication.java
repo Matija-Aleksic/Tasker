@@ -1,5 +1,6 @@
 package com.javaprojektni.tasker;
 
+import com.javaprojektni.tasker.Database.Database;
 import com.javaprojektni.tasker.Thhreads.ReadChanges;
 import com.javaprojektni.tasker.Thhreads.TaskRefresh;
 import com.javaprojektni.tasker.Thhreads.WriteChanges;
@@ -11,6 +12,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +36,7 @@ public class HelloApplication extends Application {
 
     @Override
     public void init() {
+
         ReadChanges readChanges = new ReadChanges(1);
         WriteChanges writeChanges = new WriteChanges(2);
         TaskRefresh taskRefresh = new TaskRefresh(3);

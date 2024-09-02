@@ -19,6 +19,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 
+
 import static com.javaprojektni.tasker.controllers.EditTaskController.editTaskint;
 import static java.sql.DriverManager.getConnection;
 
@@ -50,6 +51,7 @@ public class Database {
             return null;
         }
     }
+
 
     public static boolean verifyPassword(String password, String hashedPassword) {
         String newHashedPassword = hashPassword(password);
@@ -161,7 +163,7 @@ public class Database {
                 user.setUserId(resultSet.getInt("user_id"));
                 user.setName(resultSet.getString("name"));
                 user.setSurname(resultSet.getString("surname"));
-                user.setMail(resultSet.getString("email_address"));
+                user.setMail(resultSet.getString("EMAIL_ADDRESS"));
                 users.add(user);
             }
 

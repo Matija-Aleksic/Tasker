@@ -6,10 +6,11 @@ import javafx.collections.ObservableArray;
 
 public class User extends Person implements ObservableArray<User>, Comparable<User> {
     private String mail;
+    private String hashedPassword;
 
-
-    public User(int userId, String name, String surname, String emailAddress, String mail) {
-        super(userId, name, surname, emailAddress);
+    public User(int userId, String name, String surname, String mail , String hashedPassword) {
+        super(userId, name, surname);
+        this.hashedPassword = hashedPassword;
         this.mail = mail;
     }
 
