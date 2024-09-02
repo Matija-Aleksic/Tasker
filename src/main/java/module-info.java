@@ -3,6 +3,7 @@ module com.javaprojektni.tasker {
     requires javafx.fxml;
     requires java.sql;
     requires org.slf4j;
+    requires java.mail;
 
 
     opens com.javaprojektni.tasker to javafx.fxml;
