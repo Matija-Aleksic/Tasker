@@ -4,6 +4,7 @@ import com.javaprojektni.tasker.Database.Database;
 import com.javaprojektni.tasker.Exceptions.TaskUpdateFailedException;
 import com.javaprojektni.tasker.genericClass.AlertUtils;
 import com.javaprojektni.tasker.genericClass.InfoUtils;
+import com.javaprojektni.tasker.mail.MailCalendar;
 import com.javaprojektni.tasker.model.Activity;
 import com.javaprojektni.tasker.model.LogWriter;
 import com.javaprojektni.tasker.model.Task;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
+import static com.javaprojektni.tasker.mail.Mailer.sendEmail;
 import static com.javaprojektni.tasker.model.LogWriter.getChanges;
 
 public class EditTaskController {
@@ -94,7 +96,7 @@ public class EditTaskController {
     }
 
     @FXML
-    private void editTask() {
+    private void editTask() throws IOException {
         if (LoginPageController.isAdmin == Boolean.FALSE) {
             AlertUtils alertUtils = new AlertUtils(Alert.AlertType.ERROR);
             alertUtils.showAlert("niste admin");
@@ -126,6 +128,8 @@ public class EditTaskController {
             Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "Task updated: Changes - " + getChanges(oldTask, task));
             LogWriter.writeLog(activity);
             MenuBarController.showHomePage();
+            sendEmail(invited.getMail(), "Task updated", "Task updated: Changes - " + getChanges(oldTask, task),null);
+            logger.info("mail sent");
         }
 
     }
