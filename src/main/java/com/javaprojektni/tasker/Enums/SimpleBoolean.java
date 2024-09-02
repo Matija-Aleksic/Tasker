@@ -4,7 +4,7 @@ public enum SimpleBoolean {
     TRUE(true),
     FALSE(false);
 
-    private boolean value;
+    private final boolean value;
 
     SimpleBoolean(boolean value) {
         this.value = value;

@@ -45,9 +45,9 @@ public class EditTaskController {
     private ImageView userPicture;
     @FXML
     private DatePicker dueDate;
-    private ObservableList<String> selectedItems = FXCollections.observableArrayList();
+    private final ObservableList<String> selectedItems = FXCollections.observableArrayList();
     private int userId;
-    private Task task = new Task();
+    private final Task task = new Task();
     private Task oldTask = new Task();
     private ArrayList<User> invitee;
 

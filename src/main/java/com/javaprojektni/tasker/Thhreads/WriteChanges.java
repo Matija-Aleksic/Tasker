@@ -3,7 +3,7 @@ package com.javaprojektni.tasker.Thhreads;
 import com.javaprojektni.tasker.model.LogWriter;
 
 public class WriteChanges implements Runnable{
-    private int id;
+    private final int id;
 
     public WriteChanges(int id) {
         this.id = id;
