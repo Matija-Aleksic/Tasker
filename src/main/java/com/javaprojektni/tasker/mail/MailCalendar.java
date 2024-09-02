@@ -8,21 +8,20 @@ public class MailCalendar {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("BEGIN:VCALENDAR\n");
-        sb.append("VERSION:2.0\n");
-        sb.append("PRODID:-//Your Organization//NONSGML v1.0//EN\n");
-        sb.append("BEGIN:VEVENT\n");
-        sb.append("UID:" + java.util.UUID.randomUUID().toString() + "\n");
-        sb.append("DTSTAMP:" + sdf.format(new Date()) + "\n");
-        sb.append("DTSTART:" + dateFormat.format(startDate) + "\n");
-        sb.append("DTEND:" + dateFormat.format(endDate) + "\n");
-        sb.append("SUMMARY:" + summary + "\n");
-        sb.append("DESCRIPTION:" + description + "\n");
-        sb.append("LOCATION:" + location + "\n");
-        sb.append("END:VEVENT\n");
-        sb.append("END:VCALENDAR\n");
+        String sb = "BEGIN:VCALENDAR\n" +
+                "VERSION:2.0\n" +
+                "PRODID:-//Your Organization//NONSGML v1.0//EN\n" +
+                "BEGIN:VEVENT\n" +
+                "UID:" + java.util.UUID.randomUUID() + "\n" +
+                "DTSTAMP:" + sdf.format(new Date()) + "\n" +
+                "DTSTART:" + dateFormat.format(startDate) + "\n" +
+                "DTEND:" + dateFormat.format(endDate) + "\n" +
+                "SUMMARY:" + summary + "\n" +
+                "DESCRIPTION:" + description + "\n" +
+                "LOCATION:" + location + "\n" +
+                "END:VEVENT\n" +
+                "END:VCALENDAR\n";
 
-        return sb.toString();
+        return sb;
     }
 }

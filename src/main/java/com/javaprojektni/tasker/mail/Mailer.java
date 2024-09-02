@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Mailer {
-    private static Properties svojstva = new Properties();
+    private static final Properties svojstva = new Properties();
 
 
     public static void sendEmail(String to, String subject, String body, String icsContent) throws IOException {

@@ -3,7 +3,7 @@ package com.javaprojektni.tasker.Thhreads;
 import com.javaprojektni.tasker.controllers.HomeController;
 
 public class TaskRefresh implements Runnable {
-    private int id;
+    private final int id;
 
     public TaskRefresh(int id) {
         this.id = id;

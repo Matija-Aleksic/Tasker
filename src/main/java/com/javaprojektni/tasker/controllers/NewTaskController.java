@@ -42,7 +42,7 @@ public class NewTaskController {
     private ImageView userPicture;
     @FXML
     private DatePicker dueDate;
-    private ObservableList<String> selectedItems = FXCollections.observableArrayList();
+    private final ObservableList<String> selectedItems = FXCollections.observableArrayList();
     private int userId;
     private Optional<Integer> taskId;
 
@@ -89,7 +89,6 @@ public class NewTaskController {
         if (taskName.getText().isEmpty() || taskDescription.getText().isEmpty() || dueDate.getValue() == null) {
             InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.ERROR, "Error");
             infoUtils.showInfo("greska", "niste unijeli sve podatke");
-            return;
         } else {
             try {
                 newtask = taskBuilder.setName(taskName.getText()).setTaskBody(taskDescription.getText()).setDateCreated(Date.valueOf(LocalDate.now())).setTaskOwnerId(userId).setDueDate(Date.valueOf(dueDate.getValue())).setFinalizedStatus(Boolean.FALSE).setId(bigerId).createTask();
