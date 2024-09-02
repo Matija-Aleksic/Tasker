@@ -2,6 +2,7 @@ package com.javaprojektni.tasker.controllers;
 
 import com.javaprojektni.tasker.Database.Database;
 import com.javaprojektni.tasker.Exceptions.TaskUpdateFailedException;
+import com.javaprojektni.tasker.genericClass.AlertUtils;
 import com.javaprojektni.tasker.genericClass.InfoUtils;
 import com.javaprojektni.tasker.model.Activity;
 import com.javaprojektni.tasker.model.LogWriter;
@@ -47,7 +48,7 @@ public class EditTaskController {
     private int userId;
     private Task task = new Task();
     private Task oldTask = new Task();
-    private ArrayList <User> invitee;
+    private ArrayList<User> invitee;
 
     @FXML
     private void initialize() throws SQLException, IOException {
@@ -67,59 +68,65 @@ public class EditTaskController {
         dueDate.setValue(task.getDueDate().toLocalDate());
         changImg();
 
-        invitee = (ArrayList<User>) database.getAllUsers().stream()
-                .filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue()))
-                .collect(Collectors.toList());
+        invitee = (ArrayList<User>) database.getAllUsers().stream().filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue())).collect(Collectors.toList());
 
     }
 
     @FXML
     private void changImg() throws SQLException, IOException {
-        Database database = new Database();
-        database.openConnection();
 
-        userId = database.getAllUsers().stream().filter(user -> (user.getMail()).equals(logedUser)).findFirst().map(User::getUserId).orElse(0);
+            Database database = new Database();
+            database.openConnection();
 
-        String imagePath = "/images/" + userId + ".jpg";
-        URL imageUrl = getClass().getResource(imagePath);
-        Image image = null;
-        try {
-            assert imageUrl != null;
-            image = new Image(imageUrl.toExternalForm());
-        } catch (Exception e) {
-            System.out.println("nije pronadena slika");
-        }
-        userPicture.setImage(image);
+            userId = database.getAllUsers().stream().filter(user -> (user.getMail()).equals(logedUser)).findFirst().map(User::getUserId).orElse(0);
+
+            String imagePath = "/images/" + userId + ".jpg";
+            URL imageUrl = getClass().getResource(imagePath);
+            Image image = null;
+            try {
+                assert imageUrl != null;
+                image = new Image(imageUrl.toExternalForm());
+            } catch (Exception e) {
+                System.out.println("nije pronadena slika");
+            }
+            userPicture.setImage(image);
+
     }
 
     @FXML
     private void editTask() {
-        task.setTaskBody(taskDescription.getText());
-        task.setName(taskName.getText());
-        task.setDueDate(Date.valueOf(dueDate.getValue()));
-        task.setTaskOwnerId(userId);
-        task.setDateCreated(Date.valueOf(LocalDate.now()));
+        if (LoginPageController.isAdmin == Boolean.FALSE) {
+            AlertUtils alertUtils = new AlertUtils(Alert.AlertType.ERROR);
+            alertUtils.showAlert("niste admin");
+        } else {
+            task.setTaskBody(taskDescription.getText());
+            task.setName(taskName.getText());
+            task.setDueDate(Date.valueOf(dueDate.getValue()));
+            task.setTaskOwnerId(userId);
+            task.setDateCreated(Date.valueOf(LocalDate.now()));
+            String invitee = invitees.getValue();
+            User invited = database.getAllUsers().stream().filter(user -> (user.getName() + " " + user.getSurname()).equals(invitee)).findFirst().orElse(null);
 
 
-        database.deleteTaskInvitees(editTaskint);
+            database.deleteTaskInvitees(editTaskint);
 
             database.updateTask(task);
 
-        try {
-            int userId = database.getAllUsers().stream().filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue())).findFirst().map(User::getUserId).orElse(0);
-            if (userId==0)
-                throw new TaskUpdateFailedException();
-        } catch (TaskUpdateFailedException e) {
-            logger.warn(e.toString());
+            try {
+                int userId = database.getAllUsers().stream().filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue())).findFirst().map(User::getUserId).orElse(0);
+                if (userId == 0) throw new TaskUpdateFailedException();
+            } catch (TaskUpdateFailedException e) {
+                logger.warn(e.toString());
+            }
+            if (!invitee.isEmpty()) {
+                database.addTaskInvitee(editTaskint, invited.getUserId());
+            }
+            InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.INFORMATION, "Information");
+            infoUtils.showInfo("uspjesno", "stvoren novi task");
+            Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "Task updated: Changes - " + getChanges(oldTask, task));
+            LogWriter.writeLog(activity);
+            MenuBarController.showHomePage();
         }
-        if (!invitee.isEmpty()){
-            database.addTaskInvitee(editTaskint, invitee.get(1).getUserId());
-        }
-        InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.INFORMATION, "Information");
-        infoUtils.showInfo("uspjesno", "stvoren novi task");
-        Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "Task updated: Changes - " + getChanges(oldTask, task));
-        LogWriter.writeLog(activity);
-
 
     }
 

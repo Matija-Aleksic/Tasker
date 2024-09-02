@@ -125,7 +125,9 @@ public class Database {
             throw new RuntimeException(e);
         }
         if (hashedPasswordFromDB != null) {
-            return verifyPassword(password, hashedPasswordFromDB);
+            //return verifyPassword(password, hashedPasswordFromDB);
+            String newHashedPassword = hashPassword(password);
+            return hashedPasswordFromDB.equals(newHashedPassword);
         } else {
             return false;
         }

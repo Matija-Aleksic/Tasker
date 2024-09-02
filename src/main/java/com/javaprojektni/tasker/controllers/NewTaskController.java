@@ -86,22 +86,28 @@ public class NewTaskController {
         int bigerId = taskId.get();
         bigerId++;
         Task newtask = null;
-        try {
-            newtask = taskBuilder.setName(taskName.getText()).setTaskBody(taskDescription.getText()).setDateCreated(Date.valueOf(LocalDate.now())).setTaskOwnerId(userId).setDueDate(Date.valueOf(dueDate.getValue())).setFinalizedStatus(Boolean.FALSE).setId(bigerId).createTask();
-        } catch (invalidTaskException e) {
-            logger.warn(e.toString());
-        }
-        database.createTask(newtask);
+        if (taskName.getText().isEmpty() || taskDescription.getText().isEmpty() || dueDate.getValue() == null) {
+            InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.ERROR, "Error");
+            infoUtils.showInfo("greska", "niste unijeli sve podatke");
+            return;
+        }else {
+            try {
+                newtask = taskBuilder.setName(taskName.getText()).setTaskBody(taskDescription.getText()).setDateCreated(Date.valueOf(LocalDate.now())).setTaskOwnerId(userId).setDueDate(Date.valueOf(dueDate.getValue())).setFinalizedStatus(Boolean.FALSE).setId(bigerId).createTask();
+            } catch (invalidTaskException e) {
+                logger.warn(e.toString());
+            }
+            database.createTask(newtask);
 
-        Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "created a new task");
-        LogWriter.writeLog(activity);
-        InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.INFORMATION, "Information");
-        infoUtils.showInfo("uspjesno", "stvoren novi task");
-        ArrayList<User> invited = new ArrayList<>();
-        invited = (ArrayList<User>) database.getAllUsers().stream().filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue())).collect(Collectors.toList());
+            Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "created a new task");
+            LogWriter.writeLog(activity);
+            InfoUtils<String, String> infoUtils = new InfoUtils<>(Alert.AlertType.INFORMATION, "Information");
+            infoUtils.showInfo("uspjesno", "stvoren novi task");
+            ArrayList<User> invited = new ArrayList<>();
+            invited = (ArrayList<User>) database.getAllUsers().stream().filter(user -> (user.getName() + " " + user.getSurname()).equals(invitees.getValue())).collect(Collectors.toList());
 
-        for (int i = 0; i < invited.size(); i++) {
-            database.addTaskInvitee(bigerId, invited.get(i).getUserId());
+            for (int i = 0; i < invited.size(); i++) {
+                database.addTaskInvitee(bigerId, invited.get(i).getUserId());
+            }
         }
 
     }
