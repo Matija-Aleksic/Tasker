@@ -1,5 +1,7 @@
 package com.javaprojektni.tasker.Database;
 
+import com.javaprojektni.tasker.Interfaces.ReadInterface;
+import com.javaprojektni.tasker.Interfaces.SaveInterface;
 import com.javaprojektni.tasker.model.Task;
 import com.javaprojektni.tasker.model.TaskBuilder;
 import com.javaprojektni.tasker.model.User;
@@ -23,7 +25,7 @@ import java.util.Properties;
 import static com.javaprojektni.tasker.controllers.EditTaskController.editTaskint;
 import static java.sql.DriverManager.getConnection;
 
-public class Database {
+public class Database implements ReadInterface, SaveInterface {
 
     private static final String DATABASE_FILE = "src/main/java/com/javaprojektni/tasker/Files/database.properties";
     private static final Logger logger = LoggerFactory.getLogger(Database.class);
@@ -515,6 +517,51 @@ public class Database {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void readLogFile() {
+
+    }
+
+    @Override
+    public ArrayList<User> readUsers() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<User> readUsers(int id) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Task> readTasks() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Task> readTasks(int id) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<User> saveUsers() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<User> saveUsers(int id) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Task> saveTasks() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Task> saveTasks(int id) {
+        return null;
     }
 }
 
