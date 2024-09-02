@@ -22,7 +22,6 @@ public class LogWriter {
         changes.addAll(previousLogs);
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
             outputStream.writeObject(changes);
-            System.out.println("Log entry has been written to file.");
             changes.clear();
         } catch (IOException e) {
             e.printStackTrace();

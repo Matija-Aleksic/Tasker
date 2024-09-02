@@ -59,5 +59,14 @@ public class Mailer {
             System.out.println("Failed to send email");
         }
     }
+    public static void sendEmailAsync(String to, String subject, String body, String icsContent) throws IOException {
+        new Thread(() -> {
+            try {
+                sendEmail(to, subject, body, icsContent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
 
 }

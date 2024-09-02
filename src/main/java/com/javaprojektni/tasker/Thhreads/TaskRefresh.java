@@ -12,5 +12,6 @@ public class TaskRefresh implements Runnable {
     public void run() {
         HomeController.refreshTasks();
         System.out.println("taskRefresh");
+        System.out.println();
     }
 }

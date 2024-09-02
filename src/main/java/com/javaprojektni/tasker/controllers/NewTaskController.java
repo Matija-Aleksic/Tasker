@@ -24,11 +24,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
-import static com.javaprojektni.tasker.mail.Mailer.sendEmail;
+import static com.javaprojektni.tasker.mail.Mailer.sendEmailAsync;
 
 public class NewTaskController {
     private static final Logger logger = LoggerFactory.getLogger(NewTaskController.class);
-
+    private final ObservableList<String> selectedItems = FXCollections.observableArrayList();
     Database database = new Database();
     @FXML
     private TextField taskName;
@@ -42,7 +42,6 @@ public class NewTaskController {
     private ImageView userPicture;
     @FXML
     private DatePicker dueDate;
-    private final ObservableList<String> selectedItems = FXCollections.observableArrayList();
     private int userId;
     private Optional<Integer> taskId;
 
@@ -107,9 +106,11 @@ public class NewTaskController {
             for (int i = 0; i < invited.size(); i++) {
                 database.addTaskInvitee(bigerId, invited.get(i).getUserId());
             }
-
-            sendEmail(invited.get(0).getMail(), "New task from " + logedUser, "New task created: " + taskDescription.getText(), null);
-            logger.info("new task created, sent mail to " + invited.get(0).getMail());
+            if (invited.size() > 0) {
+                sendEmailAsync(invited.get(0).getMail(), "New task from " + logedUser, "New task created: " + taskDescription.getText(), null);
+                logger.info("new task created, sent mail to " + invited.get(0).getMail());
+            }
+            MenuBarController.showHomePage();
         }
 
     }

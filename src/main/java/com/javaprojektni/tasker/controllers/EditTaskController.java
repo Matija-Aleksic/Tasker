@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
 import static com.javaprojektni.tasker.mail.Mailer.sendEmail;
+import static com.javaprojektni.tasker.mail.Mailer.sendEmailAsync;
 import static com.javaprojektni.tasker.model.LogWriter.getChanges;
 
 public class EditTaskController {
@@ -127,8 +128,10 @@ public class EditTaskController {
             Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "Task updated: Changes - " + getChanges(oldTask, task));
             LogWriter.writeLog(activity);
             MenuBarController.showHomePage();
-            sendEmail(invited.getMail(), "Task updated", "Task updated: Changes - " + getChanges(oldTask, task), null);
-            logger.info("mail sent");
+            if (invitee != null){
+                sendEmailAsync(invited.getMail(), "Task updated", "Task updated: Changes - " + getChanges(oldTask, task), null);
+                logger.info("mail sent");
+            }
         }
 
     }

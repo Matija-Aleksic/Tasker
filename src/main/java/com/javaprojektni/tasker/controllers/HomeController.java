@@ -68,7 +68,7 @@ public class HomeController {
     public HomeController() {
     }
 
-    public static void refreshTasks() {
+    public static synchronized void refreshTasks() {
         try {
             Database database = new Database();
             database.openConnection();

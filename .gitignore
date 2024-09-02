@@ -36,3 +36,5 @@ build/
 
 ### Mac OS ###
 .DS_Store!/src/main/java/com/javaprojektni/tasker/Files/mail.properties
+!/src/main/java/com/javaprojektni/tasker/Files/mail.properties
+!/src/main/java/com/javaprojektni/tasker/Files/mail.properties
