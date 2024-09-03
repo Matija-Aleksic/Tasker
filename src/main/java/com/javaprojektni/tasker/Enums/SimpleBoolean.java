@@ -1,8 +1,7 @@
 package com.javaprojektni.tasker.Enums;
 
 public enum SimpleBoolean {
-    TRUE(true),
-    FALSE(false);
+    TRUE(true), FALSE(false);
 
     private final boolean value;
 

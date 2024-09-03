@@ -1,8 +1,9 @@
 package com.javaprojektni.tasker.model;
 
-import com.javaprojektni.tasker.model.Activity;
-
-import java.io.*;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 

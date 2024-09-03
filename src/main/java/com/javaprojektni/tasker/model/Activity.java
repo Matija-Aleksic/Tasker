@@ -1,14 +1,7 @@
 package com.javaprojektni.tasker.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
-
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 
 public class Activity implements Serializable {
 

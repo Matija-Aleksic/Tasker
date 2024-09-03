@@ -26,13 +26,14 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import static com.javaprojektni.tasker.controllers.LoginPageController.logedUser;
-import static com.javaprojektni.tasker.mail.Mailer.sendEmail;
 import static com.javaprojektni.tasker.mail.Mailer.sendEmailAsync;
 import static com.javaprojektni.tasker.model.LogWriter.getChanges;
 
 public class EditTaskController {
     private static final Logger logger = LoggerFactory.getLogger(EditTaskController.class);
     public static Integer editTaskint;
+    private final ObservableList<String> selectedItems = FXCollections.observableArrayList();
+    private final Task task = new Task();
     Database database = new Database();
     @FXML
     private TextField taskName;
@@ -46,9 +47,7 @@ public class EditTaskController {
     private ImageView userPicture;
     @FXML
     private DatePicker dueDate;
-    private final ObservableList<String> selectedItems = FXCollections.observableArrayList();
     private int userId;
-    private final Task task = new Task();
     private Task oldTask = new Task();
     private ArrayList<User> invitee;
 
@@ -128,7 +127,7 @@ public class EditTaskController {
             Activity activity = new Activity(Date.valueOf(LocalDate.now()), logedUser, "Task updated: Changes - " + getChanges(oldTask, task));
             LogWriter.writeLog(activity);
             MenuBarController.showHomePage();
-            if (invitee != null){
+            if (invitee != null) {
                 sendEmailAsync(invited.getMail(), "Task updated", "Task updated: Changes - " + getChanges(oldTask, task), null);
                 logger.info("mail sent");
             }

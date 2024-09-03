@@ -1,7 +1,10 @@
 package com.javaprojektni.tasker.mail;
 
 import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
@@ -59,6 +62,7 @@ public class Mailer {
             System.out.println("Failed to send email");
         }
     }
+
     public static void sendEmailAsync(String to, String subject, String body, String icsContent) throws IOException {
         new Thread(() -> {
             try {

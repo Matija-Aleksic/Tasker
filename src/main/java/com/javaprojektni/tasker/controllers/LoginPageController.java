@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class LoginPageController {
     public static Boolean isAdmin = Boolean.FALSE;
-    public static String logedUser ="default";
+    public static String logedUser = "default";
     @FXML
     private TextField usernameTextfield;
     @FXML
@@ -28,6 +28,14 @@ public class LoginPageController {
 
     public static void setAdmin(Boolean value) {
         isAdmin = value;
+    }
+
+    public static String getLogedUser() {
+        return logedUser;
+    }
+
+    public static void setLogedUser(String logedUser) {
+        LoginPageController.logedUser = logedUser;
     }
 
     @FXML
@@ -114,13 +122,5 @@ public class LoginPageController {
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static String getLogedUser() {
-        return logedUser;
-    }
-
-    public static void setLogedUser(String logedUser) {
-        LoginPageController.logedUser = logedUser;
     }
 }

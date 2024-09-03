@@ -19,12 +19,10 @@ public class UpdateFinishStatus implements Runnable {
     public void run() {
         List<Task> tasks = Database.getAllTasks();
 
-        List<Task> tasksToUpdate = tasks.stream()
-                .filter(task -> {
-                    java.sql.Date dueDate = task.getDueDate();
-                    return dueDate != null && dueDate.toLocalDate().isBefore(LocalDate.now());
-                })
-                .collect(Collectors.toList());
+        List<Task> tasksToUpdate = tasks.stream().filter(task -> {
+            java.sql.Date dueDate = task.getDueDate();
+            return dueDate != null && dueDate.toLocalDate().isBefore(LocalDate.now());
+        }).collect(Collectors.toList());
 
         for (Task task : tasksToUpdate) {
             task.setFinalizedStatus(true);

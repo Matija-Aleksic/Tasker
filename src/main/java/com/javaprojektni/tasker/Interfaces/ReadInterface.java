@@ -7,8 +7,12 @@ import java.util.ArrayList;
 
 public interface ReadInterface {
     void readLogFile();
+
     ArrayList<User> readUsers();
+
     ArrayList<User> readUsers(int id);
+
     ArrayList<Task> readTasks();
+
     ArrayList<Task> readTasks(int id);
 }

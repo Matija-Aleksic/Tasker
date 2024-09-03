@@ -1,7 +1,6 @@
 package com.javaprojektni.tasker.genericClass;
 
 
-
 import javafx.scene.control.Alert;
 
 public class InfoUtils<T, U> {

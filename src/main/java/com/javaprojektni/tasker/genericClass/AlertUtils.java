@@ -10,10 +10,12 @@ public class AlertUtils<T> {
     public AlertUtils(Alert.AlertType alertType) {
         this.alertType = alertType;
     }
+
     public AlertUtils(Alert.AlertType alertType, T message) {
         this.alertType = alertType;
         this.message = (String) message;
     }
+
     public void showAlert(T message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(alertType.toString());

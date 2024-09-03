@@ -7,7 +7,10 @@ import java.util.ArrayList;
 
 public interface SaveInterface {
     ArrayList<User> saveUsers();
+
     ArrayList<User> saveUsers(int id);
+
     ArrayList<Task> saveTasks();
+
     ArrayList<Task> saveTasks(int id);
 }

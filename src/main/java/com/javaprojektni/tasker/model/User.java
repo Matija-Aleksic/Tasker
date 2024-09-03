@@ -8,7 +8,7 @@ public class User extends Person implements ObservableArray<User>, Comparable<Us
     private String mail;
     private String hashedPassword;
 
-    public User(int userId, String name, String surname, String mail , String hashedPassword) {
+    public User(int userId, String name, String surname, String mail, String hashedPassword) {
         super(userId, name, surname);
         this.hashedPassword = hashedPassword;
         this.mail = mail;
